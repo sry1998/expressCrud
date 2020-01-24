@@ -12,10 +12,17 @@ app.post('/create', async function(req, res, next) {
     console.log(ans);
     res.send(ans);
   } catch (err) {
-    // next(err);
-    console.log("err", err)
-    throw err;
-    //res.status(500).send(err);
+    res.status(500).send(err);
+  }
+});
+
+app.get('/getall', async function (req, res, next) {
+  const allUsers = await userModel.find({});
+
+  try {
+    res.send(allUsers);
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
 
@@ -27,5 +34,17 @@ app.get('/get/:id', async function (req, res) {
     res.status(500).send(err);
   }
 });
+
+
+app.delete('/delete/:id', async function(req, res) {
+  try {
+    const deleteUser = await userModel.findByIdAndDelete(req.params.id);
+    const msg = "User removed successfully"
+    if (!deleteUser) res.status(404).send("No item found");
+    res.status(200).send(msg);
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
 
 module.exports = app
