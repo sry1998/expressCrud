@@ -35,6 +35,16 @@ app.get('/get/:id', async function (req, res) {
   }
 });
 
+app.put('/update/:id', async function(req, res) {
+  try {
+    const msg = "User updated successfully";
+    await userModel.findByIdAndUpdate(req.params.id, req.body)
+    await userModel.save()
+    res.send(msg)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
 
 app.delete('/delete/:id', async function(req, res) {
   try {
