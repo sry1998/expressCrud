@@ -4,51 +4,46 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/create', async function (req, res, next) {
+app.post('/users', async function (req, res, next) {
   const createUser = new userModel(req.body);
-  console.log(createUser);
   try {
     const ans = await createUser.save();
-    console.log(ans);
     res.send(ans);
   } catch (err) {
     res.status(500).end(err);
   }
 });
 
-app.get('/getall', async function (req, res, next) {
-  const allUsers = await userModel.find({});
-
+app.get('/users', async function (req, res, next) {
   try {
+    const allUsers = await userModel.find({});
     res.send(allUsers);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
-app.get('/get/:id', async function (req, res) {
-  const users = await userModel.find({ id: req.params.id });
+app.get('/users/:id', async function (req, res) {
   try {
+    const users = await userModel.find({ id: req.params.id });
     res.send(users);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
-app.put('/update/:id', async function (req, res) {
-
+app.put('/users/:id', async function (req, res) {
+  const msg = "User updated successfully";
   try {
-    const msg = "User updated successfully";
-
     await userModel.updateOne({ id: req.params.id }, { $set: { name: req.body.name } })
     await userModel.save()
-    res.send(msg)
   } catch (err) {
     res.status(500).send(err)
   }
+  res.send(msg)
 })
 
-app.delete('/delete/:id', async function (req, res) {
+app.delete('/users/:id', async function (req, res) {
   try {
     const deleteUser = await userModel.deleteOne({ id: +req.params.id });
     const msg = "User removed successfully"
