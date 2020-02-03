@@ -1,4 +1,3 @@
 # expressCrud
 
-Crud Operations using Nodejs Expressjs and MongoDB. 
-
+CRUD operations using NodeJs Express and MongoDB
