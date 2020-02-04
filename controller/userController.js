@@ -1,10 +1,24 @@
-const express = require('express');
-const userModel = require('./user');
-const app = express.Router();
+const userModel = require('../model/userModel');
 
-app.use(express.json());
+exports.getAllUser = async function (req, res) {
+  try {
+    const allUsers = await userModel.find({});
+    res.send(allUsers);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
 
-app.post('/users', async function (req, res, next) {
+exports.getUserById =  async function (req, res) {
+  try {
+    const users = await userModel.find({ id: req.params.id });
+    res.send(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+ 
+exports.addUser = async function (req, res) {
   const createUser = new userModel(req.body);
   try {
     const ans = await createUser.save();
@@ -12,27 +26,9 @@ app.post('/users', async function (req, res, next) {
   } catch (err) {
     res.status(500).end(err);
   }
-});
+}; 
 
-app.get('/users', async function (req, res, next) {
-  try {
-    const allUsers = await userModel.find({});
-    res.send(allUsers);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-app.get('/users/:id', async function (req, res) {
-  try {
-    const users = await userModel.find({ id: req.params.id });
-    res.send(users);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-app.put('/users/:id', async function (req, res) {
+exports.updateUser = async function (req, res) {
   const msg = "User updated successfully";
   try {
     await userModel.updateOne({ id: req.params.id }, { $set: { name: req.body.name } })
@@ -41,9 +37,9 @@ app.put('/users/:id', async function (req, res) {
     res.status(500).send(err)
   }
   res.send(msg)
-})
+};
 
-app.delete('/users/:id', async function (req, res) {
+exports.deleteUser = async function (req, res) {
   try {
     const deleteUser = await userModel.deleteOne({ id: +req.params.id });
     const msg = "User removed successfully"
@@ -52,6 +48,4 @@ app.delete('/users/:id', async function (req, res) {
   } catch (err) {
     res.status(500).send(err)
   }
-})
-
-module.exports = app
+};
